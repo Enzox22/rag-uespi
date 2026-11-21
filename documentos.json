@@ -1,0 +1,76 @@
+[
+  {
+    "codigo": "D1",
+    "titulo": "Tutorial SIGAA – Solicitar validação de documentos para registro de diploma",
+    "arquivo": "D1_validacao_documentos_diploma.pdf",
+    "tipo": "tutorial"
+  },
+  {
+    "codigo": "D2",
+    "titulo": "Tutorial SIGAA – Como criar meu e-mail institucional",
+    "arquivo": "D2_email_institucional.pdf",
+    "tipo": "tutorial"
+  },
+  {
+    "codigo": "D3",
+    "titulo": "Tutorial SIGAA – Como enviar minhas atividades complementares (AACC)",
+    "arquivo": "D3_registro_aacc.pdf",
+    "tipo": "tutorial",
+    "substituicoes": [
+      [
+        "sistemaSIGAA",
+        "sistema SIGAA"
+      ]
+    ]
+  },
+  {
+    "codigo": "D4",
+    "titulo": "Tutorial SIGAA – Matrícula curricular de discentes",
+    "arquivo": "D4_matricula_curricular.pdf",
+    "tipo": "tutorial",
+    "substituicoes": [
+      [
+        "Ente na aba",
+        "Entre na aba"
+      ],
+      [
+        "https: / sigaa. uespi.br/siga a",
+        "https://sigaa.uespi.br/sigaa"
+      ],
+      [
+        "turmas,clique",
+        "turmas, clique"
+      ]
+    ]
+  },
+  {
+    "codigo": "D5",
+    "titulo": "Calendário Acadêmico 2026.1 e 2026.2 – Resolução CEPEX 002/2026",
+    "arquivo": "D5_calendario_academico_2026.pdf",
+    "tipo": "calendario"
+  },
+  {
+    "codigo": "D6",
+    "titulo": "Projeto Pedagógico do Curso (PPC) – CST em Sistemas de Computação, Campus Parnaíba",
+    "arquivo": "D6_ppc_sistemas_computacao.pdf",
+    "tipo": "ppc",
+    "secoes": [
+      "1.4",
+      "7.1",
+      "7.2",
+      "7.3",
+      "7.4",
+      "9",
+      "12.4",
+      "16.1",
+      "APÊNDICE B",
+      "APÊNDICE C"
+    ]
+  },
+  {
+    "codigo": "D7",
+    "titulo": "Edital PREG/UESPI nº 016/2026 – Programa de Monitoria 2026.2",
+    "arquivo": "D7_edital_monitoria_2026_2.pdf",
+    "tipo": "edital"
+  }
+]

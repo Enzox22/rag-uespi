@@ -1,0 +1,8 @@
+Solicitar Validação de Documentos para Registro de
+Diploma
+1. Acesse o sistema SIGAA.
+2. Selecione o módulo “Portal do Discente”.
+3. Na tela inicial do Portal do Discente, acesse Ensino>Solicitar Validação de Documentos para
+Registro de Diploma:
+4. Clique em “Escolher arquivo” para fazer o Upload do arquivo do documento, em seguida
+clique em “Submeter”:

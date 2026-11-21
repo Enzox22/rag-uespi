@@ -1,0 +1,14 @@
+1. Acesse o sistemaSIGAA.
+2. Selecione o módulo “Portal do Discente”.
+3. Acesse os menus: “Ensino”-> “Registro de Atividades Autônomas”.
+4.Serão exibidos todas as atividades enviadas anteriormente, com suas respectivas situações.
+5. Para enviar uma nova atividade, selecione “Cadastrar Novo Registro”.
+6. Será exibido um formulário em que você deve anexar o comprovante da atividade, selecionar
+o tipo da atividade, e colocar uma descrição da solicitação. Clique em “Próximo Passo”.
+7. Serão exibidos os dados informados para que você confira, após a conferência, clique em
+“Cadastrar”.
+8. Após o cadastro você será direcionado a página de listagem de solicitações:
+9. Você pode repetir o processo para cadastrar quantas atividades forem necessárias.
+10.Basta aguardar a avaliação de suas atividades pela coordenação do curso. Caso suas
+atividades sejam aceitas, elas serão contabilizadas em seu histórico na seção “Carga Horária
+Integralizada/Pendente”:
