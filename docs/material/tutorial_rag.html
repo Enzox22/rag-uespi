@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Como construir um assistente RAG em Python</title>
+<style>
+@page{size:A4;margin:22mm 20mm 20mm 20mm}
+@page :first{margin:0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,'DejaVu Sans',sans-serif;font-size:10.5pt;line-height:1.55;color:#16202E}
+h1,h2,h3{font-family:Inter,sans-serif;color:#16202E;line-height:1.25}
+h2{font-size:17pt;margin:0 0 10px;padding-top:4px;border-bottom:2px solid #1E4FA8;padding-bottom:6px;break-after:avoid}
+h3{font-size:12.5pt;margin:18px 0 6px;break-after:avoid}
+p{margin:0 0 9px;text-align:justify}
+ul,ol{margin:0 0 9px;padding-left:22px}
+li{margin-bottom:3px}
+code{font-family:'DejaVu Sans Mono',monospace;font-size:8.8pt;background:#EEF2F8;padding:1px 4px;border-radius:3px}
+pre{font-family:'DejaVu Sans Mono',monospace;font-size:8.3pt;line-height:1.45;background:#F4F6FA;border:1px solid #DCE2EC;border-left:4px solid #1E4FA8;border-radius:6px;padding:10px 12px;margin:6px 0 12px;white-space:pre-wrap;break-inside:avoid}
+pre code{background:none;padding:0;font-size:inherit}
+.capitulo{break-before:page}
+.caixa{border:1px solid #CFDAF0;background:#F2F6FD;border-radius:8px;padding:10px 14px;margin:10px 0 14px;break-inside:avoid}
+.caixa strong:first-child{color:#1E4FA8}
+.atencao{border-color:#F0D9B5;background:#FDF7EC}
+.atencao strong:first-child{color:#9A5B00}
+table{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:9.5pt;break-inside:avoid}
+th,td{border:1px solid #D5DCE6;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#EEF2F8}
+figure{margin:10px 0 16px;text-align:center;break-inside:avoid}
+figure img{max-width:100%;max-height:300px}
+figcaption{font-size:9pt;color:#4A5568;margin-top:6px}
+.formula{font-family:'DejaVu Serif',serif;font-size:11.5pt;text-align:center;margin:8px 0 12px}
+/* capa */
+.capa{height:297mm;padding:30mm 24mm 22mm;display:flex;flex-direction:column;background:#1E4FA8;color:#fff;break-after:page}
+.capa .inst{font-size:10.5pt;line-height:1.5;opacity:.92}
+.capa .meio{margin-top:auto;margin-bottom:auto}
+.capa .tipo{font-size:11pt;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:10px}
+.capa h1{color:#fff;font-size:31pt;margin:0 0 14px;line-height:1.15}
+.capa .sub{font-size:13pt;opacity:.92;max-width:150mm}
+.capa .autores{font-size:11pt;line-height:1.7}
+.capa .rodape{margin-top:18mm;font-size:10pt;opacity:.85}
+.capa img{width:64px;height:64px;margin-bottom:18px}
+/* sumário */
+.sumario ol{list-style:none;padding:0;font-size:11pt}
+.sumario li{display:flex;border-bottom:1px dotted #B8C2D0;padding:3px 0;margin:0}
+.sumario li span:first-child{width:28px;color:#1E4FA8;font-weight:600}
+.exercicio{break-inside:avoid;margin-bottom:12px}
+.exercicio h3{margin-top:12px}
+</style>
+</head>
+<body>
+
+<section class="capa">
+  <div class="inst">Universidade Estadual do Piauí (UESPI)<br>Campus Prof. Alexandre Alves de Oliveira – Parnaíba-PI<br>Curso Superior de Tecnologia em Sistemas de Computação</div>
+  <div class="meio">
+    <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" style="margin-bottom:18px"><rect width="64" height="64" rx="16" fill="#FFFFFF" fill-opacity="0.15"/><path d="M19 12h17l10 10v16" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><path d="M36 12v10h10" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><path d="M19 12v40h12" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><path d="M25 26h10M25 33h7" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/><circle cx="42" cy="44" r="7.5" fill="none" stroke="#FFFFFF" stroke-width="4"/><path d="M47.5 49.5L53 55" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/></svg>
+    <div class="tipo">Material didático</div>
+    <h1>Como construir um assistente RAG em Python</h1>
+    <div class="sub">Um guia passo a passo para responder perguntas com base em documentos, usando Geração Aumentada por Recuperação</div>
+  </div>
+  <div class="autores"><strong>Autor:</strong> Enzo Damasceno Falcão<br><strong>Orientador:</strong> Prof. Dr. Átila Rabelo Lopes</div>
+  <div class="rodape">Parnaíba-PI · 2026 · Código de apoio: github.com/Enzox22/rag-uespi</div>
+</section>
+
+<section class="sumario">
+  <h2>Sumário</h2>
+  <ol>
+    <li><span></span>Apresentação</li>
+    <li><span>1</span>Modelos de linguagem e o problema da alucinação</li>
+    <li><span>2</span>O que é RAG</li>
+    <li><span>3</span>Preparando o ambiente</li>
+    <li><span>4</span>Extraindo o texto dos PDFs</li>
+    <li><span>5</span>Dividindo o texto em trechos</li>
+    <li><span>6</span>Embeddings e índice vetorial</li>
+    <li><span>7</span>Buscando trechos e gerando a resposta</li>
+    <li><span>8</span>Avaliando o sistema</li>
+    <li><span>9</span>Exercícios</li>
+    <li><span>10</span>Gabarito</li>
+    <li><span></span>Referências</li>
+  </ol>
+
+  <h2 style="margin-top:16px">Apresentação</h2>
+  <p>Este material ensina, passo a passo, a construir um assistente que responde perguntas com base em um conjunto de documentos, usando a técnica de Geração Aumentada por Recuperação (<em>Retrieval-Augmented Generation</em> – RAG). O exemplo usado do início ao fim é o de documentos acadêmicos da UESPI: calendário, editais, projeto pedagógico e tutoriais do SIGAA. O código é o de um projeto real, desenvolvido como Trabalho de Conclusão de Curso, em que o mesmo modelo de linguagem passou de 3,5% para 82,5% de respostas corretas nas perguntas institucionais ao receber os trechos certos dos documentos.</p>
+  <div class="caixa"><strong>Objetivos de aprendizagem.</strong> Ao final, você será capaz de: (1) explicar por que modelos de linguagem alucinam e como o RAG reduz esse problema; (2) extrair e dividir o texto de documentos em PDF; (3) gerar embeddings e montar um índice vetorial; (4) recuperar os trechos mais relevantes para uma pergunta e montar o prompt; e (5) avaliar a busca com as métricas Recall@k e MRR.</div>
+  <p><strong>Público.</strong> Estudantes de cursos de computação com noções básicas de Python (funções, listas, dicionários e leitura de arquivos). Não é preciso conhecimento prévio de inteligência artificial.</p>
+  <p><strong>Como usar.</strong> Leia os capítulos em ordem e rode os exemplos. Todo o código está no arquivo <code>docs/material/codigo/mini_rag.py</code> do repositório <code>github.com/Enzox22/rag-uespi</code>, uma versão didática, em um único arquivo, do sistema completo. Os exercícios do Capítulo 9 têm gabarito no Capítulo 10.</p>
+</section>
+
+<section class="capitulo">
+  <h2>1. Modelos de linguagem e o problema da alucinação</h2>
+  <p>Um Grande Modelo de Linguagem (<em>Large Language Model</em> – LLM) é uma rede neural treinada com enormes volumes de texto para prever a próxima palavra (mais precisamente, o próximo <em>token</em>) de uma sequência. Os LLMs atuais usam a arquitetura Transformer, cujo mecanismo de autoatenção relaciona cada palavra com todas as outras do texto (VASWANI <em>et al.</em>, 2017). Treinados em escala, eles respondem perguntas, resumem e explicam conteúdos sem treinamento específico para cada tarefa.</p>
+  <p>O conhecimento de um LLM, porém, fica limitado aos dados vistos no treinamento, até uma data de corte. Informações locais e que mudam com frequência, como o calendário de um semestre ou as regras de um edital, em geral não estão lá. Diante de uma pergunta assim, o modelo tende a produzir uma resposta plausível, mas inventada. Esse fenômeno é chamado de <strong>alucinação</strong>: conteúdo sem sustentação na fonte ou nos fatos, apresentado com a mesma fluência de um conteúdo correto (JI <em>et al.</em>, 2023; HUANG <em>et al.</em>, 2025).</p>
+  <div class="caixa atencao"><strong>Exemplo real.</strong> No experimento que deu origem a este material, sem acesso aos documentos, o modelo acertou só 3,5% das perguntas sobre prazos e procedimentos da UESPI. Em 29,7% das respostas ele inventou ao menos uma informação, como caminhos de menu do SIGAA ou setores que não existem.</div>
+  <p>Treinar de novo o modelo a cada semestre seria caro e lento. A solução mais usada é outra: entregar ao modelo, no momento da pergunta, os trechos dos documentos que contêm a resposta. É isso que o RAG faz.</p>
+
+  <h2 style="margin-top:22px">2. O que é RAG</h2>
+  <p>A Geração Aumentada por Recuperação foi proposta por Lewis <em>et al.</em> (2020) e combina duas partes: um componente de <strong>recuperação</strong>, que busca trechos relevantes em uma base de documentos, e um componente de <strong>geração</strong>, o LLM, que escreve a resposta a partir desses trechos. Na forma mais comum, chamada de RAG ingênua (GAO <em>et al.</em>, 2024), o processo tem duas fases, mostradas na Figura 1.</p>
+  <figure>
+    <img src="img/pipeline.png" alt="Fluxo do pipeline RAG: indexação dos documentos e consulta">
+    <figcaption>Figura 1 – Fases de indexação (feita uma vez) e de consulta (a cada pergunta). Fonte: elaborada pelo autor (2026).</figcaption>
+  </figure>
+  <ol>
+    <li><strong>Indexação</strong> (feita uma vez): os documentos são lidos, divididos em trechos e convertidos em vetores numéricos (embeddings), guardados em um banco vetorial.</li>
+    <li><strong>Consulta</strong> (a cada pergunta): a pergunta também vira um vetor; o sistema busca os trechos com vetores mais próximos, monta o prompt com esses trechos e o LLM gera a resposta, indicando a fonte.</li>
+  </ol>
+  <p>A qualidade final depende das duas pontas: se a busca não traz o trecho certo, o modelo não tem de onde tirar a resposta; se traz, o modelo ainda precisa interpretá-lo corretamente. Por isso, os capítulos a seguir tratam cada etapa separadamente, e o Capítulo 8 mostra como avaliar a busca.</p>
+</section>
+
+<section class="capitulo">
+  <h2>3. Preparando o ambiente</h2>
+  <p>Você vai precisar do Python 3.10 ou mais recente. Crie um ambiente virtual e instale as bibliotecas:</p>
+<pre><code>python -m venv .venv
+# Windows: .venv\Scripts\activate     Linux/macOS: source .venv/bin/activate
+pip install pymupdf sentence-transformers chromadb numpy openai</code></pre>
+  <table>
+    <tr><th>Biblioteca</th><th>Para que serve</th></tr>
+    <tr><td><code>pymupdf</code></td><td>Ler o texto de arquivos PDF</td></tr>
+    <tr><td><code>sentence-transformers</code></td><td>Gerar embeddings com o modelo BAAI/bge-m3 (CHEN <em>et al.</em>, 2024)</td></tr>
+    <tr><td><code>chromadb</code></td><td>Banco vetorial: guarda os vetores e faz a busca por similaridade</td></tr>
+    <tr><td><code>numpy</code></td><td>Operações com vetores</td></tr>
+    <tr><td><code>openai</code></td><td>Cliente para chamar o LLM; a API da Groq usa a mesma interface</td></tr>
+  </table>
+  <p>O modelo de linguagem usado é o <code>gpt-oss-120b</code>, de pesos abertos, acessado pela API da Groq, que tem plano gratuito. Crie uma conta em <code>console.groq.com</code>, gere uma chave e guarde-a em uma variável de ambiente:</p>
+<pre><code># Windows (PowerShell)
+$env:GROQ_API_KEY = "sua-chave-aqui"
+# Linux/macOS
+export GROQ_API_KEY="sua-chave-aqui"</code></pre>
+  <div class="caixa atencao"><strong>Segurança.</strong> Nunca escreva a chave dentro do código nem a envie ao GitHub. No projeto completo ela fica em um arquivo <code>.env</code>, que está listado no <code>.gitignore</code> para não ser publicado.</div>
+  <p>Na primeira execução, o modelo de embeddings (cerca de 2,3 GB) é baixado automaticamente. Para testar o código sem baixá-lo, todos os comandos aceitam a opção <code>--teste</code>, que usa um embedder simplificado (veja o Capítulo 6).</p>
+
+  <h2 style="margin-top:22px">4. Extraindo o texto dos PDFs</h2>
+  <p>O primeiro passo é transformar cada PDF em texto. A biblioteca PyMuPDF lê o texto página por página. Em seguida, fazemos uma limpeza básica: trocamos ligaduras tipográficas (o caractere único "ﬁ" vira "fi"), juntamos espaços repetidos e descartamos linhas que são só números de página.</p>
+<pre><code>def extrair_texto(caminho_pdf: str) -&gt; str:
+    """Lê o texto de todas as páginas de um PDF e faz uma limpeza básica."""
+    import pymupdf
+    linhas = []
+    with pymupdf.open(caminho_pdf) as doc:
+        for pagina in doc:
+            for linha in pagina.get_text("text").splitlines():
+                linha = re.sub(r"\s+", " ", linha.replace("ﬁ", "fi").replace("ﬂ", "fl")).strip()
+                if linha and not re.fullmatch(r"\d{1,3}", linha):   # descarta nº de página
+                    linhas.append(linha)
+    return "\n".join(linhas)</code></pre>
+  <p>Na prática, a extração automática é só o começo. No projeto real, foi preciso: remover cabeçalhos e rodapés que se repetiam em todas as páginas (o módulo <code>rag/extracao.py</code> faz isso contando as linhas repetidas nas bordas); transcrever à mão o texto de imagens, como prints de tela do SIGAA, que a PyMuPDF não lê; e organizar o texto em seções, cada uma iniciada por <code>## </code>, como um evento do calendário ou um item do edital.</p>
+  <div class="caixa"><strong>Dica.</strong> Sempre abra e leia o texto extraído antes de seguir. Erros aqui, como uma tabela desalinhada ou uma data perdida, se propagam para todas as etapas seguintes.</div>
+</section>
+
+<section class="capitulo">
+  <h2>5. Dividindo o texto em trechos</h2>
+  <p>Um documento inteiro é grande demais para ser comparado com uma pergunta curta e para caber no prompt. Por isso ele é dividido em trechos (<em>chunks</em>). O tamanho do trecho é uma escolha importante:</p>
+  <ul>
+    <li><strong>Trechos grandes</strong> carregam mais contexto, mas misturam assuntos e "diluem" o significado, o que atrapalha a busca.</li>
+    <li><strong>Trechos pequenos</strong> são mais precisos, mas podem cortar a informação no meio, como uma data separada do evento a que se refere.</li>
+  </ul>
+  <p>A função abaixo junta parágrafos até chegar perto de um limite de palavras. Um parágrafo maior que o limite é cortado em partes.</p>
+<pre><code>def dividir_em_trechos(texto: str, maximo: int = MAX_PALAVRAS) -&gt; list[str]:
+    """Junta parágrafos até chegar perto de `maximo` palavras por trecho."""
+    trechos, atual = [], []
+    for paragrafo in texto.split("\n"):
+        palavras = paragrafo.split()
+        if not palavras:
+            continue
+        if atual and len(atual) + len(palavras) &gt; maximo:
+            trechos.append(" ".join(atual))
+            atual = []
+        atual.extend(palavras)
+        while len(atual) &gt; maximo:                 # parágrafo gigante: corta no limite
+            trechos.append(" ".join(atual[:maximo]))
+            atual = atual[maximo:]
+    if atual:
+        trechos.append(" ".join(atual))
+    return trechos</code></pre>
+  <p>No projeto real, a divisão segue a estrutura de cada documento: cada seção <code>## </code> vira um trecho, e só as seções com mais de 180 palavras são subdivididas, repetindo o título da seção em cada parte (<code>rag/chunking.py</code>). Isso evita que um evento do calendário seja separado da sua data. Durante o desenvolvimento, reduzir o limite de 350 para 180 palavras e aumentar o número de trechos recuperados de 4 para 6 elevou a taxa de acerto da busca de 82,4% para 89,7%.</p>
+  <div class="caixa"><strong>Dica.</strong> Antes de transformar o texto em vetor, acrescente o nome do documento ao trecho (por exemplo, <code>"Calendário Acadêmico | 10/08/2026 – Início das aulas"</code>). Isso ajuda a busca a encontrar o documento certo.</div>
+
+  <h2 style="margin-top:22px">6. Embeddings e índice vetorial</h2>
+  <p>Um <strong>embedding</strong> é um vetor de números que representa o significado de um texto. Textos com sentido parecido ficam com vetores próximos, mesmo que usem palavras diferentes: "quando começam as aulas?" fica perto de "início do período letivo". O modelo BAAI/bge-m3 (CHEN <em>et al.</em>, 2024), usado no projeto, gera vetores de 1.024 dimensões e funciona bem em português.</p>
+  <p>A proximidade entre dois vetores é medida pela <strong>similaridade de cosseno</strong>, que vai de −1 a 1 (quanto maior, mais parecidos):</p>
+  <p class="formula">cos(<b>a</b>, <b>b</b>) = (<b>a</b> · <b>b</b>) / (‖<b>a</b>‖ × ‖<b>b</b>‖)</p>
+  <p>Quando os vetores são normalizados (comprimento 1), o denominador vale 1 e a similaridade é apenas o produto escalar. Por isso o código pede <code>normalize_embeddings=True</code>:</p>
+<pre><code>class Embedder:
+    def __init__(self, teste: bool = False):
+        self.teste = teste
+        if not teste:
+            from sentence_transformers import SentenceTransformer
+            self.modelo = SentenceTransformer(MODELO_EMBEDDINGS)
+
+    def codificar(self, textos: list[str]) -&gt; np.ndarray:
+        if self.teste:
+            return np.vstack([embedding_teste(t) for t in textos])
+        return self.modelo.encode(textos, normalize_embeddings=True)</code></pre>
+  <p>O <strong>banco vetorial</strong> guarda os vetores e encontra rapidamente os mais próximos de um vetor de consulta. Usamos o ChromaDB, configurado para a distância de cosseno. A indexação lê todos os PDFs de uma pasta, divide em trechos, gera os vetores e grava tudo:</p>
+<pre><code>def indexar(pasta_pdfs: str, embedder: Embedder) -&gt; None:
+    ids, textos, fontes = [], [], []
+    for pdf in sorted(Path(pasta_pdfs).glob("*.pdf")):
+        for n, trecho in enumerate(dividir_em_trechos(extrair_texto(str(pdf))), 1):
+            ids.append(f"{pdf.stem}-{n:03d}")
+            textos.append(trecho)
+            fontes.append({"documento": pdf.stem})
+    vetores = embedder.codificar([f"{f['documento']} | {t}" for f, t in zip(fontes, textos)])
+    colecao(recriar=True).add(ids=ids, documents=textos, metadatas=fontes,
+                              embeddings=[list(map(float, v)) for v in vetores])</code></pre>
+<pre><code>python mini_rag.py indexar pasta_dos_pdfs/</code></pre>
+  <div class="caixa"><strong>Sobre a opção <code>--teste</code>.</strong> O embedder de teste apenas conta palavras (com uma técnica chamada <em>hashing</em>), sem entender significado. Ele serve para verificar se o código roda, mas acerta bem menos: "início das aulas" e "começam as aulas" quase não se parecem para ele. Use sempre o modelo real para resultados de verdade.</div>
+</section>
+
+<section class="capitulo">
+  <h2>7. Buscando trechos e gerando a resposta</h2>
+  <p>Na consulta, a pergunta passa pelo mesmo modelo de embeddings e o banco devolve os <em>k</em> trechos mais próximos. O ChromaDB devolve a distância de cosseno; a similaridade é 1 menos a distância.</p>
+<pre><code>def buscar(pergunta: str, embedder: Embedder, k: int = K) -&gt; list[dict]:
+    vetor = embedder.codificar([pergunta])[0]
+    r = colecao().query(query_embeddings=[list(map(float, vetor))], n_results=k)
+    return [{"id": r["ids"][0][i],
+             "documento": r["metadatas"][0][i]["documento"],
+             "texto": r["documents"][0][i],
+             "similaridade": round(1 - r["distances"][0][i], 3)}
+            for i in range(len(r["ids"][0]))]</code></pre>
+  <p>Em seguida, os trechos são numerados e colocados no prompt, junto com instruções claras: basear-se nos trechos, admitir quando não souber e indicar a fonte.</p>
+<pre><code>INSTRUCOES = ("Você é um assistente que responde dúvidas de estudantes universitários. "
+              "Responda em português, de forma objetiva. Baseie sua resposta nos trechos "
+              "fornecidos. Se a informação não estiver nos trechos, diga claramente que "
+              "não sabe. Indique a fonte da informação.")
+
+def montar_mensagens(pergunta: str, trechos: list[dict]) -&gt; list[dict]:
+    blocos = "\n\n".join(f"[{n}] Fonte: {t['documento']}\n{t['texto']}"
+                         for n, t in enumerate(trechos, 1))
+    return [{"role": "system", "content": INSTRUCOES},
+            {"role": "user", "content": f"Trechos de documentos:\n\n{blocos}\n\nPergunta: {pergunta}"}]</code></pre>
+  <p>Por fim, as mensagens são enviadas ao LLM. A temperatura 0 deixa as respostas mais estáveis, o que é importante para comparar resultados.</p>
+<pre><code>def gerar_resposta(mensagens: list[dict]) -&gt; str:
+    from openai import OpenAI          # a Groq usa a mesma interface da OpenAI
+    cliente = OpenAI(api_key=os.environ["GROQ_API_KEY"], base_url="https://api.groq.com/openai/v1")
+    r = cliente.chat.completions.create(model=MODELO_LLM, messages=mensagens,
+                                        temperature=0, max_tokens=2000)
+    return r.choices[0].message.content</code></pre>
+<pre><code>python mini_rag.py perguntar "Quando começam as aulas do período letivo 2026.2?"
+python mini_rag.py perguntar "..." --sem-llm    # mostra só a busca e o prompt</code></pre>
+  <div class="caixa atencao"><strong>Limitações observadas no projeto.</strong> (1) Quando nenhum trecho responde à pergunta, o modelo às vezes responde a uma pergunta "vizinha" usando os trechos recebidos; (2) uma data que estava só no título da seção foi ignorada pelo modelo; (3) documentos oficiais com informações conflitantes levam a respostas erradas com aparência oficial. Instruções mais precisas no prompt e a curadoria dos documentos ajudam a reduzir esses erros.</div>
+</section>
+
+<section class="capitulo">
+  <h2>8. Avaliando o sistema</h2>
+  <p>Avaliar um sistema RAG exige separar a qualidade da busca da qualidade da resposta (ES <em>et al.</em>, 2024). Para a busca, monte uma lista de perguntas e, para cada uma, anote qual é o trecho do documento que contém a resposta (o <strong>trecho-fonte</strong>). Depois, verifique em que posição esse trecho aparece entre os <em>k</em> recuperados.</p>
+  <h3>Recall@k (taxa de acerto)</h3>
+  <p>Proporção de perguntas em que o trecho-fonte aparece entre os <em>k</em> trechos recuperados:</p>
+  <p class="formula">Recall@k = (nº de perguntas com o trecho-fonte entre os k primeiros) / (nº total de perguntas)</p>
+  <h3>MRR (<em>Mean Reciprocal Rank</em>)</h3>
+  <p>Média do inverso da posição do trecho-fonte. Se ele vem em 1º lugar, a pergunta vale 1; em 2º, vale 1/2; em 3º, 1/3; se não foi recuperado, vale 0. O MRR mostra não só se o trecho foi encontrado, mas se ele apareceu no topo.</p>
+  <p class="formula">MRR = (1/N) × Σ (1 / posição<sub>i</sub>)</p>
+  <table>
+    <tr><th>Pergunta</th><th>Posição do trecho-fonte (k = 6)</th><th>Entre os 6?</th><th>1 / posição</th></tr>
+    <tr><td>P1</td><td>1º</td><td>Sim</td><td>1</td></tr>
+    <tr><td>P2</td><td>3º</td><td>Sim</td><td>0,333</td></tr>
+    <tr><td>P3</td><td>não recuperado</td><td>Não</td><td>0</td></tr>
+    <tr><td>P4</td><td>2º</td><td>Sim</td><td>0,5</td></tr>
+    <tr><th>Resultado</th><th></th><th>Recall@6 = 3/4 = 75%</th><th>MRR = 1,833 / 4 = 0,458</th></tr>
+  </table>
+  <p>No projeto real, com 68 perguntas, o resultado foi Recall@6 de 91,2% e MRR de 0,761. Para a qualidade das respostas, usou-se uma rubrica aplicada por avaliadores humanos, com critérios de acurácia, completude, alucinação, rastreabilidade (indicação da fonte) e abstenção. A avaliação humana é a referência quando métricas automáticas não conseguem verificar se uma informação é verdadeira (CHANG <em>et al.</em>, 2024).</p>
+  <div class="caixa"><strong>Boa prática.</strong> Compare sempre o mesmo modelo com e sem RAG, usando as mesmas perguntas e as mesmas instruções. Só assim é possível saber quanto da melhora vem dos documentos, e não de outra mudança.</div>
+</section>
+
+<section class="capitulo">
+  <h2>9. Exercícios</h2>
+  <div class="exercicio"><h3>Exercício 1 – Alucinação</h3><p>Explique, com suas palavras, por que um LLM sem acesso aos documentos tende a errar a pergunta "Quando começam as aulas do período letivo 2026.2 na UESPI?", mas acerta "O que é um estágio curricular?".</p></div>
+  <div class="exercicio"><h3>Exercício 2 – Divisão em trechos</h3><p>Um texto tem três parágrafos, com 100, 50 e 400 palavras, nessa ordem. Usando a função <code>dividir_em_trechos</code> com <code>maximo = 180</code>, quantos trechos são gerados e com quantas palavras cada um?</p></div>
+  <div class="exercicio"><h3>Exercício 3 – Similaridade de cosseno</h3><p>Calcule a similaridade de cosseno entre os vetores <b>a</b> = (1, 0) e <b>b</b> = (0,6; 0,8). Os dois vetores estão normalizados? O que isso permite simplificar no cálculo?</p></div>
+  <div class="exercicio"><h3>Exercício 4 – Recall@k e MRR</h3><p>Em cinco perguntas, o trecho-fonte apareceu nas posições: 2º, não recuperado, 1º, 1º e 5º (com k = 6). Calcule o Recall@6 e o MRR.</p></div>
+  <div class="exercicio"><h3>Exercício 5 – Valor de k</h3><p>Rode o <code>mini_rag.py</code> com <code>K = 3</code> e depois com <code>K = 10</code>. Que vantagem e que desvantagem você espera em cada caso?</p></div>
+  <div class="exercicio"><h3>Exercício 6 – Embedder de teste</h3><p>Faça a mesma pergunta com e sem a opção <code>--teste</code> e compare os trechos recuperados. Por que o embedder de teste costuma recuperar trechos piores?</p></div>
+  <div class="exercicio"><h3>Exercício 7 – Instruções do prompt</h3><p>No projeto, o modelo respondeu "outubro de 2026" quando o documento dizia "07/10/2026". Reescreva a constante <code>INSTRUCOES</code> para reduzir esse tipo de imprecisão.</p></div>
+</section>
+
+<section class="capitulo">
+  <h2>10. Gabarito</h2>
+  <p><strong>Exercício 1.</strong> As datas do calendário de 2026 são informação local, específica da UESPI e recente: provavelmente não estavam nos dados de treinamento, então o modelo inventa uma data plausível (alucinação). Já o conceito de estágio curricular é geral e aparece em muitos textos públicos, por isso faz parte do conhecimento do modelo. No projeto, sem RAG, o modelo acertou 3,5% das perguntas institucionais e 63,6% das de conceito geral.</p>
+  <p><strong>Exercício 2.</strong> Quatro trechos, com 150, 180, 180 e 40 palavras. Os dois primeiros parágrafos se juntam (100 + 50 = 150). O terceiro não cabe no trecho atual (150 + 400 &gt; 180), então o trecho de 150 é fechado; o parágrafo de 400 palavras é cortado em 180 + 180, e sobram 40 palavras no último trecho.</p>
+  <p><strong>Exercício 3.</strong> O produto escalar é 1 × 0,6 + 0 × 0,8 = 0,6. Os comprimentos são ‖<b>a</b>‖ = 1 e ‖<b>b</b>‖ = √(0,36 + 0,64) = 1, então os dois estão normalizados e a similaridade é 0,6 / (1 × 1) = 0,6. Com vetores normalizados, basta calcular o produto escalar.</p>
+  <p><strong>Exercício 4.</strong> O trecho-fonte foi recuperado em 4 das 5 perguntas: Recall@6 = 4/5 = 80%. MRR = (1/2 + 0 + 1 + 1 + 1/5) / 5 = 2,7 / 5 = 0,54.</p>
+  <p><strong>Exercício 5.</strong> Com k = 3, o prompt fica menor e mais focado, mas aumenta a chance de o trecho certo ficar de fora (menor Recall). Com k = 10, o trecho certo aparece com mais frequência, mas o prompt fica maior (mais custo e tempo) e traz mais trechos irrelevantes, que podem confundir o modelo (SHI <em>et al.</em>, 2023). No projeto, k = 6 foi um bom equilíbrio.</p>
+  <p><strong>Exercício 6.</strong> O embedder de teste só considera palavras iguais: perguntas e trechos que dizem a mesma coisa com palavras diferentes ("começam as aulas" e "início do período letivo") parecem distantes. O modelo bge-m3 representa o significado, então aproxima textos equivalentes mesmo sem palavras em comum.</p>
+  <p><strong>Exercício 7.</strong> Uma resposta possível: acrescentar às instruções "Ao informar datas, prazos ou valores, copie-os exatamente como aparecem no trecho, no formato original (por exemplo, 07/10/2026), sem arredondar ou resumir". Outras soluções válidas incluem pedir que o modelo cite o trecho usado entre aspas.</p>
+
+  <h2 style="margin-top:24px">Referências</h2>
+  <p style="text-align:left">CHANG, Yupeng <em>et al.</em> A survey on evaluation of large language models. <strong>ACM Transactions on Intelligent Systems and Technology</strong>, v. 15, n. 3, p. 1-45, 2024.</p>
+  <p style="text-align:left">CHEN, Jianlyu <em>et al.</em> M3-Embedding: multi-linguality, multi-functionality, multi-granularity text embeddings through self-knowledge distillation. <em>In</em>: FINDINGS OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: ACL 2024. <strong>Proceedings</strong> [...]. Bangkok: ACL, 2024. p. 2318-2335.</p>
+  <p style="text-align:left">ES, Shahul <em>et al.</em> RAGAS: automated evaluation of retrieval augmented generation. <em>In</em>: CONFERENCE OF THE EUROPEAN CHAPTER OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: SYSTEM DEMONSTRATIONS, 18., 2024, St. Julian's. <strong>Proceedings</strong> [...]. St. Julian's: ACL, 2024. p. 150-158.</p>
+  <p style="text-align:left">GAO, Yunfan <em>et al.</em> Retrieval-augmented generation for large language models: a survey. <strong>arXiv</strong>, 2024. Disponível em: https://arxiv.org/abs/2312.10997.</p>
+  <p style="text-align:left">HUANG, Lei <em>et al.</em> A survey on hallucination in large language models: principles, taxonomy, challenges, and open questions. <strong>ACM Transactions on Information Systems</strong>, v. 43, n. 2, p. 1-55, 2025.</p>
+  <p style="text-align:left">JI, Ziwei <em>et al.</em> Survey of hallucination in natural language generation. <strong>ACM Computing Surveys</strong>, v. 55, n. 12, p. 1-38, 2023.</p>
+  <p style="text-align:left">LEWIS, Patrick <em>et al.</em> Retrieval-augmented generation for knowledge-intensive NLP tasks. <em>In</em>: CONFERENCE ON NEURAL INFORMATION PROCESSING SYSTEMS, 34., 2020. <strong>Advances in Neural Information Processing Systems 33</strong>. Red Hook: Curran Associates, 2020. p. 9459-9474.</p>
+  <p style="text-align:left">SHI, Freda <em>et al.</em> Large language models can be easily distracted by irrelevant context. <em>In</em>: INTERNATIONAL CONFERENCE ON MACHINE LEARNING, 40., 2023, Honolulu. <strong>Proceedings</strong> [...]. [S. l.]: PMLR, 2023. v. 202, p. 31210-31227.</p>
+  <p style="text-align:left">VASWANI, Ashish <em>et al.</em> Attention is all you need. <em>In</em>: CONFERENCE ON NEURAL INFORMATION PROCESSING SYSTEMS, 31., 2017, Long Beach. <strong>Advances in Neural Information Processing Systems 30</strong>. Red Hook: Curran Associates, 2017. p. 5998-6008.</p>
+</section>
+
+</body>
+</html>

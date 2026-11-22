@@ -5,6 +5,7 @@ Software desenvolvido como parte do Trabalho de Conclusão de Curso de **Enzo Da
 O sistema implementa um pipeline de Geração Aumentada por Recuperação (RAG) que responde a dúvidas acadêmicas com base em sete documentos oficiais e públicos da UESPI, e foi usado para comparar as respostas do LLM gpt-oss-120b sem e com RAG em 74 perguntas.
 
 - **Site do projeto:** https://enzox22.github.io/rag-uespi/ (pasta `docs/`)
+- **Material didático:** [Como construir um assistente RAG em Python](docs/material/Tutorial_RAG_Python.pdf) (PDF, com o código de apoio em `docs/material/codigo/mini_rag.py`)
 - **Tecnologias:** Python, PyMuPDF, sentence-transformers (BAAI/bge-m3), ChromaDB, API da Groq, NumPy e SciPy.
 - **Corpus:** `corpus/pdf/` (originais), `corpus/bruto/` (texto extraído) e `corpus/texto/` (texto revisado usado no índice).
 - **Banco de perguntas:** `banco_perguntas_uespi_rag.xlsx` (perguntas, gabarito, rubrica e modelo da planilha de pontuação).
