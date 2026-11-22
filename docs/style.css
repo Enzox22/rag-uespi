@@ -16,9 +16,14 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;margin:0}
 .topo-linha{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px}
 .marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--texto);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px}
 .marca-icone{width:36px;height:36px;border-radius:10px;background:var(--acento);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
-.topo nav{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:15px;font-weight:500}
-.topo nav a{text-decoration:none;color:var(--texto2)}
-.topo nav a:hover{color:var(--acento)}
+.menu{display:flex;align-items:center;gap:6px 22px;font-size:15px;font-weight:500}
+.menu a{text-decoration:none;color:var(--texto2);padding:6px 0;border-bottom:2px solid transparent}
+.menu a:hover{color:var(--acento)}
+.menu a.ativo{color:var(--acento);border-bottom-color:var(--acento)}
+.menu a.menu-github{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--borda2);border-radius:999px;color:var(--texto)}
+.menu a.menu-github:hover{border-color:var(--acento);color:var(--acento)}
+.menu-botao{display:none;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--borda2);border-radius:10px;background:var(--branco);color:var(--texto);cursor:pointer}
+section[id]{scroll-margin-top:72px}
 
 .faixa{padding:72px 0}
 .branca{background:var(--branco)}
@@ -98,5 +103,12 @@ details.assistente summary{cursor:pointer;font-weight:600;font-size:14px;color:v
   .faixa{padding:48px 0}
   .cabecalho-secao h2,.sobre-texto h2{font-size:28px}
   .valor{font-size:32px}
-  .topo{position:static}
+}
+@media (max-width:760px){
+  .menu-botao{display:inline-flex}
+  .menu{display:none;flex-direction:column;align-items:stretch;gap:0;width:100%;padding:8px 0 4px;border-top:1px solid var(--borda)}
+  .menu.aberto{display:flex}
+  .menu a{padding:12px 4px;border-bottom:1px solid var(--borda)}
+  .menu a.ativo{border-bottom-color:var(--borda);border-left:3px solid var(--acento);padding-left:10px}
+  .menu a.menu-github{margin-top:10px;justify-content:center;border:1px solid var(--borda2)}
 }

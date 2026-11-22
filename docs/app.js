@@ -97,6 +97,39 @@
     elDetalhe.appendChild(criar('p', 'aviso', 'Informação válida para os documentos de 2026. Confira sempre o documento oficial antes de agir.'));
   }
 
+
+  // Menu de celular
+  var botaoMenu = document.getElementById('menu-botao');
+  var menu = document.getElementById('menu');
+  botaoMenu.addEventListener('click', function () {
+    var aberto = menu.classList.toggle('aberto');
+    botaoMenu.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+    botaoMenu.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+  });
+  menu.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      menu.classList.remove('aberto');
+      botaoMenu.setAttribute('aria-expanded', 'false');
+      botaoMenu.setAttribute('aria-label', 'Abrir menu');
+    });
+  });
+
+  // Destaca no menu a seção que está na tela
+  var linksSecao = Array.prototype.slice.call(menu.querySelectorAll('a[href^="#"]'));
+  function marcarAtiva() {
+    var atual = null;
+    linksSecao.forEach(function (a) {
+      var sec = document.querySelector(a.getAttribute('href'));
+      if (sec && sec.getBoundingClientRect().top <= 120) atual = a;
+    });
+    linksSecao.forEach(function (a) {
+      if (a === atual) { a.classList.add('ativo'); a.setAttribute('aria-current', 'location'); }
+      else { a.classList.remove('ativo'); a.removeAttribute('aria-current'); }
+    });
+  }
+  window.addEventListener('scroll', marcarAtiva, { passive: true });
+  marcarAtiva();
+
   elBusca.addEventListener('input', desenharLista);
 
   fetch('perguntas.json')
