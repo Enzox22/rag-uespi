@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG UESPI – Dúvidas acadêmicas respondidas com documentos oficiais</title>
+<meta name="description" content="Projeto de TCC (TSC/UESPI): dúvidas acadêmicas da UESPI respondidas com base em documentos oficiais, usando Geração Aumentada por Recuperação (RAG).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="pular" href="#pergunte">Pular para a busca</a>
+
+<header class="topo">
+  <div class="container topo-linha">
+    <a href="#inicio" class="marca"><span class="marca-icone" aria-hidden="true">R</span><span>RAG UESPI</span></a>
+    <nav aria-label="Seções">
+      <a href="#pergunte">Pergunte</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#sobre">Sobre o projeto</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="inicio" class="faixa branca">
+  <div class="container hero">
+    <div class="hero-texto">
+      <span class="selo">Trabalho de Conclusão de Curso · TSC/UESPI · 2026</span>
+      <h1>Dúvidas acadêmicas da UESPI respondidas com base nos documentos oficiais</h1>
+      <p class="lead">Respostas conferidas no calendário acadêmico, no edital de monitoria, no projeto pedagógico do curso e nos tutoriais do SIGAA, sempre com a indicação de onde a informação está.</p>
+      <div class="acoes">
+        <a class="botao primario" href="#pergunte">Buscar uma dúvida</a>
+        <a class="botao" href="#como-funciona">Como funciona</a>
+      </div>
+    </div>
+    <div class="hero-exemplo" aria-label="Exemplo de pergunta e resposta">
+      <div class="rotulo">Exemplo</div>
+      <div class="balao pergunta-balao">Quando começam as aulas de 2026.2?</div>
+      <div class="balao resposta-balao">As aulas do período letivo 2026.2 começam em <strong>10/08/2026</strong>.
+        <div class="fonte-mini">Fonte: Calendário Acadêmico 2026 (Resolução CEPEX nº 002/2026)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pergunte" class="faixa">
+  <div class="container">
+    <div class="cabecalho-secao">
+      <h2>Pergunte</h2>
+      <p>Busque entre <span id="total">68</span> dúvidas respondidas a partir dos documentos oficiais de 2026.</p>
+    </div>
+    <div class="busca-layout">
+      <div class="cartao lista-cartao">
+        <label for="busca">Digite sua dúvida</label>
+        <input id="busca" type="search" placeholder="Ex.: monitoria, trancamento, TCC, diploma" autocomplete="off">
+        <div class="temas" role="group" aria-label="Filtrar por tema" id="temas"></div>
+        <p class="contagem" id="contagem" aria-live="polite"></p>
+        <ul class="lista" id="lista"></ul>
+      </div>
+      <article class="cartao detalhe" id="detalhe" aria-live="polite">
+        <p class="vazio">Escolha uma dúvida na lista para ver a resposta.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona" class="faixa branca">
+  <div class="container">
+    <div class="cabecalho-secao">
+      <h2>Como funciona</h2>
+      <p>A técnica se chama Geração Aumentada por Recuperação (RAG): antes de responder, o sistema busca os trechos certos nos documentos e os entrega ao modelo de linguagem.</p>
+    </div>
+    <ol class="passos">
+      <li><span class="num">1</span><strong>Documentos oficiais</strong><span>O texto de 7 documentos da UESPI é extraído dos PDFs e revisado.</span></li>
+      <li><span class="num">2</span><strong>Trechos</strong><span>Cada documento é dividido em trechos: um evento, um item de edital, uma seção.</span></li>
+      <li><span class="num">3</span><strong>Índice de significado</strong><span>Os trechos viram vetores (embeddings) guardados em um banco vetorial.</span></li>
+      <li><span class="num">4</span><strong>Busca</strong><span>Para cada pergunta, o sistema encontra os 6 trechos mais parecidos.</span></li>
+      <li><span class="num">5</span><strong>Resposta com fonte</strong><span>O modelo responde com base nos trechos e indica o documento de origem.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="resultados" class="faixa">
+  <div class="container">
+    <div class="cabecalho-secao">
+      <h2>Resultados do estudo</h2>
+      <p>O mesmo modelo (gpt-oss-120b) respondeu 74 perguntas sem e com acesso aos documentos, e as respostas foram avaliadas por rubrica humana.</p>
+    </div>
+    <div class="numeros">
+      <div class="cartao numero"><span class="rotulo">Respostas corretas nas perguntas institucionais</span><span class="valor">3,5% → <em>82,5%</em></span><span class="nota">sem RAG → com RAG</span></div>
+      <div class="cartao numero"><span class="rotulo">Trecho correto encontrado pela busca</span><span class="valor"><em>91,2%</em></span><span class="nota">das perguntas com resposta na base</span></div>
+      <div class="cartao numero"><span class="rotulo">Base do experimento</span><span class="valor">74 · 7</span><span class="nota">perguntas · documentos oficiais</span></div>
+    </div>
+    <div class="cartao documentos">
+      <h3>Documentos da base</h3>
+      <ul>
+        <li>Calendário Acadêmico 2026 (Resolução CEPEX nº 002/2026)</li>
+        <li>Edital PREG/UESPI nº 016/2026 – Monitoria 2026.2</li>
+        <li>Projeto Pedagógico do Curso de Tecnologia em Sistemas de Computação</li>
+        <li>Tutorial SIGAA – Matrícula curricular</li>
+        <li>Tutorial SIGAA – Atividades complementares (AACC)</li>
+        <li>Tutorial SIGAA – E-mail institucional</li>
+        <li>Tutorial SIGAA – Validação de documentos para diploma</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="sobre" class="faixa branca">
+  <div class="container sobre">
+    <div class="sobre-texto">
+      <h2>Sobre o projeto</h2>
+      <p>Trabalho de Conclusão de Curso do Curso Superior de Tecnologia em Sistemas de Computação da Universidade Estadual do Piauí (UESPI), Campus Prof. Alexandre Alves de Oliveira, Parnaíba-PI.</p>
+      <p>Artigo: “Geração Aumentada por Recuperação no Suporte Acadêmico: Análise Comparativa das Respostas de um LLM a Dúvidas Recorrentes de Estudantes da UESPI” (em avaliação na RECIMA21 – Revista Científica Multidisciplinar).</p>
+      <div class="acoes">
+        <a class="botao escuro" href="https://github.com/Enzox22/rag-uespi">Código no GitHub</a>
+      </div>
+    </div>
+    <div class="pessoas">
+      <div class="cartao pessoa"><span class="rotulo">Autor</span><strong>Enzo Damasceno Falcão</strong></div>
+      <div class="cartao pessoa"><span class="rotulo">Orientador</span><strong>Prof. Dr. Átila Rabelo Lopes</strong></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="rodape">
+  <div class="container">RAG UESPI · TCC 2026 · As respostas valem para os documentos de 2026 e não substituem os documentos oficiais nem a coordenação do curso.</div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
